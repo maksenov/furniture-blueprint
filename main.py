@@ -3,6 +3,7 @@
 import os
 import numpy as np
 import cv2
+from screeninfo import get_monitors
 
 # requirements winsound
 #import winsound
@@ -86,7 +87,7 @@ def get_image(files, default_image):
     type = ERROR
 
     if len(files) == 0:
-        print(f"File '{file_name}' not found")
+        print(f"File not found")
     elif len(files) > 1:
         print(f"Duplicate files found for file '{file_name}' candidates are:")
         print(files)
@@ -108,7 +109,15 @@ def main_loop():
 
     window_name = 'Scanner renderer (press Escape to exit)'
     cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
-    cv2.moveWindow(window_name, 20, 20) #screen.x - 1, screen.y - 1)
+    width = 600
+    height = 400
+    for m in get_monitors():
+        width = m.width
+        height = m.height
+
+    cv2.moveWindow(window_name, 0, 0)
+    task_bar_height = 100
+    cv2.resizeWindow(window_name, width - 1, height - task_bar_height)
     cv2.imshow(window_name, default_image)
 
     exit_app = False
@@ -126,7 +135,7 @@ def main_loop():
         if exit_app:
             break
 
-        print(f'Read from scanner: {file_name}')
+        print(f'Read from scanner: ')
         files = find_all(file_name, directory)
 
         image, type = get_image(files, default_image)

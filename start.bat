@@ -1,8 +1,20 @@
 
-cd /D "%~dp0\.."
 
-pip install -r "%~dp0\requirements.txt" 
+pip install -r "%~dp0\requirements.txt"
 
-python "%~dp0\main.py"
+IF "%1"=="" GOTO HAVE_0
 
-pause
+:HAVE_1
+        cd /D "%~dp1"
+        goto RUN
+
+:HAVE_0
+        cd /D "%~dp0"
+        goto RUN
+
+
+:RUN
+        python "%~dp0\main.py"
+
+REM        pause
+
