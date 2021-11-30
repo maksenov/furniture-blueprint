@@ -75,6 +75,10 @@ def read_file_name_from_keyboard():
             key = cv2.waitKey()
     return (file_name, exit_app)
 
+def create_opencv_image_from_stringio(img_stream, cv2_img_flag=cv2.IMREAD_COLOR):
+    img_stream.seek(0)
+    img_array = np.asarray(bytearray(img_stream.read()), dtype=np.uint8)
+    return cv2.imdecode(img_array, cv2_img_flag)
 
 def get_image(files, default_image):
     """ """
@@ -90,8 +94,9 @@ def get_image(files, default_image):
         full_path = files[0]
         print(f"Load file: {full_path}")
         try:
-            image = cv2.imread(files[0])
-            type = SUCCESS
+            with open(files[0], "rb") as fstream:
+                image = create_opencv_image_from_stringio(fstream)
+                type = SUCCESS
         except cv2.error as error:
             print("[Error]: to load default_image {} {}".format(full_path, error))
 
